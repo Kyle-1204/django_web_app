@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'charts',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,9 +50,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'web_project.urls'
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Allow requests from the Next.js frontend
+]
+
+ROOT_URLCONF = 'django_api.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'web_project.wsgi.application'
+WSGI_APPLICATION = 'django_api.wsgi.application'
 
 
 # Database
