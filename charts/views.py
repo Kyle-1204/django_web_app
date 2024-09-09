@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 # Create your views here.
 def candlestick_data(request):
@@ -11,25 +11,25 @@ def candlestick_data(request):
             {"x": "2023-01-04", "open": 45, "high": 55, "low": 40, "close": 50},
         ]
     }
-    return JsonResponse(data)
+    return Response(data)
 
 def line_chart_data(request):
     data = {
         "labels": ["Jan", "Feb", "Mar", "Apr"],
         "data": [10, 20, 30, 40]
     }
-    return JsonResponse(data)
+    return Response(data)
 
 def bar_chart_data(request):
     data = {
         "labels": ["Product A", "Product B", "Product C"],
         "data": [100, 150, 200]
     }
-    return JsonResponse(data)
+    return Response(data)
 
 def pie_chart_data(request):
     data = {
         "labels": ["Red", "Blue", "Yellow"],
         "data": [300, 50, 100]
     }
-    return JsonResponse(data)
+    return Response(data)
