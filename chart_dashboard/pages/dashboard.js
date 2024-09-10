@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement, PointElement, ArcElement } from 'chart.js';
+import { createChart } from 'lightweight-charts'; //for candlestick chart
 
-// Register the necessary chart.js components
+// Register chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement, PointElement, ArcElement);
 
 const Dashboard = () => {
-  // State for each chart's data
+  //Establish state for chart data
   const [candlestickData, setCandlestickData] = useState(null);
   const [lineChartData, setLineChartData] = useState(null);
   const [barChartData, setBarChartData] = useState(null);
   const [pieChartData, setPieChartData] = useState(null);
 
-  // Fetch data from the API for all charts
+  // Use axios to fetch data from django backend
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,13 +37,43 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const CandlestickChart = () => (
-    <div className="chart-container">
-      <h2>Candlestick Chart</h2>
-      <pre>{JSON.stringify(candlestickData, null, 2)}</pre>
-    </div>
-  );
+  //Candlestick Chart
+  const CandlestickChart = ({ candlestickData }) => {
+    const chartContainerRef = useRef();
+  
+    useEffect(() => {
+      if (!candlestickData) return; //Wait for data to load
+      
+      //Styling for data to fit in container
+      const chart = createChart(chartContainerRef.current, {
+        width: chartContainerRef.current.clientWidth,
+        height: 400,
+      });
+      
+      //Add candlestick structure
+      const candlestickSeries = chart.addCandlestickSeries();
+  
+      //Formatting
+      const formattedData = candlestickData.data.map(item => ({
+        time: item.x, 
+        open: item.open,
+        high: item.high,
+        low: item.low,
+        close: item.close,
+      }));
+  
+      //Add formatted data
+      candlestickSeries.setData(formattedData);
+  
+      //Clean up chart
+      return () => chart.remove();
+    }, [candlestickData]);
+  
+    //Return Data
+    return <div ref={chartContainerRef} className="candlestick-chart-container" />;
+  };
 
+  //Line Chart Data
   const LineChart = () => {
     const data = {
       labels: lineChartData?.labels || [],
@@ -60,6 +91,7 @@ const Dashboard = () => {
     return <Line data={data} />;
   };
 
+  //Bar Chart Data
   const BarChart = () => {
     const data = {
       labels: barChartData?.labels || [],
@@ -75,6 +107,7 @@ const Dashboard = () => {
     return <Bar data={data} />;
   };
 
+  //Pie Chart Data
   const PieChart = () => {
     const data = {
       labels: pieChartData?.labels || [],
@@ -91,12 +124,14 @@ const Dashboard = () => {
     return <Pie data={data} />;
   };
 
+  //Display and Styling
   return (
     <div>
       <h1>Dashboard</h1>
       <div className="dashboard-grid">
         <div className="chart-item">
-          {candlestickData ? <CandlestickChart /> : <p> Loading Candlestick Chart...</p>}
+          <p> Candlestick Data</p>
+          {candlestickData ? <CandlestickChart candlestickData={candlestickData}/> : <p> Loading Candlestick Chart...</p>}
         </div>
         <div className="chart-item">
           {lineChartData ? <LineChart /> : <p>Loading Line Chart...</p>}
@@ -125,6 +160,10 @@ const Dashboard = () => {
           text-align: center;
           margin-bottom: 20px;
         }
+        p {
+          color: #504A4B;
+          text-align: center;
+        }   
       `}</style>
     </div>
   );
