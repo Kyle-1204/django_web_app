@@ -36,16 +36,13 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // Candlestick Chart component placeholder (can be filled in with a charting library like TradingView.js)
   const CandlestickChart = () => (
     <div className="chart-container">
-      {/* Add your Candlestick chart rendering logic here */}
       <h2>Candlestick Chart</h2>
       <pre>{JSON.stringify(candlestickData, null, 2)}</pre>
     </div>
   );
 
-  // Line Chart component
   const LineChart = () => {
     const data = {
       labels: lineChartData?.labels || [],
@@ -63,7 +60,6 @@ const Dashboard = () => {
     return <Line data={data} />;
   };
 
-  // Bar Chart component
   const BarChart = () => {
     const data = {
       labels: barChartData?.labels || [],
@@ -79,7 +75,6 @@ const Dashboard = () => {
     return <Bar data={data} />;
   };
 
-  // Pie Chart component
   const PieChart = () => {
     const data = {
       labels: pieChartData?.labels || [],
@@ -101,7 +96,7 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
       <div className="dashboard-grid">
         <div className="chart-item">
-          <CandlestickChart />
+          {candlestickData ? <CandlestickChart /> : <p> Loading Candlestick Chart...</p>}
         </div>
         <div className="chart-item">
           {lineChartData ? <LineChart /> : <p>Loading Line Chart...</p>}
@@ -134,3 +129,6 @@ const Dashboard = () => {
     </div>
   );
 };
+
+export default Dashboard;
+

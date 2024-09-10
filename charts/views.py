@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 # Create your views here.
+@api_view(('GET',))
 def candlestick_data(request):
     data = {
         "data": [
@@ -13,6 +14,7 @@ def candlestick_data(request):
     }
     return Response(data)
 
+@api_view(('GET',))
 def line_chart_data(request):
     data = {
         "labels": ["Jan", "Feb", "Mar", "Apr"],
@@ -20,6 +22,7 @@ def line_chart_data(request):
     }
     return Response(data)
 
+@api_view(('GET',))
 def bar_chart_data(request):
     data = {
         "labels": ["Product A", "Product B", "Product C"],
@@ -27,6 +30,7 @@ def bar_chart_data(request):
     }
     return Response(data)
 
+@api_view(('GET',))
 def pie_chart_data(request):
     data = {
         "labels": ["Red", "Blue", "Yellow"],
